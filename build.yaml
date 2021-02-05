@@ -1,0 +1,28 @@
+deps:
+  event.lua:
+  - core.lua
+  - db.lua
+  - state.lua
+  main.lua:
+  - event.lua
+  - minimap.lua
+  - slash.lua
+  minimap.lua:
+  - db.lua
+  - lib.lua
+  - state.lua
+  slash.lua:
+  - core.lua
+  - db.lua
+  - lib.lua
+  state.lua:
+  - db.lua
+libs:
+  libdbicon-1.0: https://repos.wowace.com/wow/libdbicon-1-0/trunk
+roots:
+- main.lua
+toc:
+  Interface: 11304
+  Title: Olliverr's Travels
+  Notes: Utilities for hunters
+  SavedVariablesPerCharacter: OlliverrsTravelsPlayerData
