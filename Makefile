@@ -4,14 +4,17 @@ LUAS:=$(shell python3 build.py files)
 
 all: test.out
 clean:
-	rm -f olliverrstravels.toc *.tmp *.out db.lua
+	rm -f OlliverrsTravels.* *.tmp *.out db.lua
 
-olliverrstravels.toc: build.yaml build.py
-	python3 build.py toc > olliverrstravels.toc
+OlliverrsTravels.zip: OlliverrsTravels.toc $(LUAS)
+	python3 build.py zip
+
+OlliverrsTravels.toc: build.yaml build.py
+	python3 build.py toc > OlliverrsTravels.toc
 
 db.lua: db.py
 	python3 db.py > db.lua
 
-test.out: test.lua olliverrstravels.toc $(LUAS)
+test.out: test.lua OlliverrsTravels.toc $(LUAS)
 	bash -c "set -o pipefail && lua test.lua 2>&1 | tee test.tmp"
 	mv test.tmp test.out

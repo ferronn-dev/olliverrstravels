@@ -1,6 +1,6 @@
 __pycache__
 libs/
-olliverrstravels.toc
 db.lua
+OlliverrsTravels.*
 *.out
 *.tmp

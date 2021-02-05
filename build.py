@@ -5,6 +5,7 @@ from toposort import toposort_flatten
 import subprocess
 import sys
 import yaml
+import zipfile
 
 def filelist(config):
     for lib, repo in config['libs'].items():
@@ -60,10 +61,17 @@ def update(config):
             stderr=sys.stderr,
             stdout=sys.stderr)
 
+def zip_(config):
+    addon = config['addon']
+    with zipfile.ZipFile(f'{addon}.zip', 'w') as zf:
+        for f in filelist(config) + [f'{addon}.toc']:
+            zf.write(f, f'{addon}/{f}')
+
 commands = {
     'files': files,
     'toc': toc,
     'update': update,
+    'zip': zip_,
 }
 
 def args():
