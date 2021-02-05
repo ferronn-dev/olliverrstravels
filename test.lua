@@ -369,7 +369,7 @@ end
 
 -- Stay in sync with the .toc file.
 T.addonFiles = {}
-for line in io.lines('olliverrstravels.toc') do
+for line in io.lines('OlliverrsTravels.toc') do
   line = line:sub(1, -2)
   if line:sub(1, 2) ~= '##' then
     table.insert(T.addonFiles, assert(loadfile(line)))
