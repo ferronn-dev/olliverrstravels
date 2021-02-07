@@ -6,7 +6,7 @@ def bq(tmps, selects):
     client = bigquery.Client('wow-ferronn-dev')
     script = client.query(
         job_config=bigquery.job.QueryJobConfig(
-            default_dataset='wow-ferronn-dev.wow_tools_dbc_1_13_6_36935',
+            default_dataset='wow-ferronn-dev.wow_tools_dbc_1_13_6_36935_enUS',
             use_legacy_sql=False),
         query=';\n'.join([
             *[f'CREATE OR REPLACE TEMPORARY TABLE {n} AS {q}' for n, q in tmps],
