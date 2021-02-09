@@ -399,9 +399,6 @@ function T.RunTests(tests)
 end
 
 T.RunTests({
-  function()
-    assert(SLASH_OLLIVERRSTRAVELS1 == '/olli')
-  end,
   function(G)
     T.SendEvent('CHAT_MSG_SYSTEM', 'hello')
     assert(G.State.NumSkills() == 0)
@@ -462,75 +459,6 @@ T.RunTests({
     G.State.AddSkillByName('Shell Shield', 1)
     T.SendEvent('PLAYER_LOGOUT')
     assert(OlliverrsTravelsPlayerData['26065,1'])
-  end,
-  function()
-    SlashCmdList['OLLIVERRSTRAVELS']('help')
-    T.assertPrinted([[
-Olliverr's Travels in Classic WoW
- help - this help message
- here - beasts worth taming in this zone
- all - all zones with abilities to learn
-]])
-  end,
-  function()
-    T.SendEvent('CRAFT_SHOW')
-    SlashCmdList['OLLIVERRSTRAVELS']('all')
-    T.assertPrinted([[
-Bite 3: i48, o1421, o1424, o1431, o1432, o1433, o1440, o1442
-Charge 1: o1411, o1412, o1426, o1429, o1432, o1438
-Charge 2: o1432, o1433, o1436
-Claw 1: o1411, o1426, o1438
-Claw 2: o1411, o1421, o1426, o1429, o1438, o1439
-Claw 3: i48, o1424, o1432, o1436, o1439, o1440
-Cower 1: o1411, o1412, o1413, o1420, o1426, o1438, o1439
-Cower 2: o1413, o1424, o1439, o1442
-Furious Howl 1: o1412, o1421, o1436, o1440
-Lightning Breath 2: o1413
-Scorpid Poison 1: o1411, o1413
-Screech 1: o1436
-Shell Shield 1: i48
-]])
-  end,
-  function()
-    T.bestMap = 42
-    SlashCmdList['OLLIVERRSTRAVELS']('here')
-    T.assertPrinted('No data for this map.\n')
-  end,
-  function()
-    T.bestMap = 1411
-    T.SendEvent('CRAFT_SHOW')
-    SlashCmdList['OLLIVERRSTRAVELS']('here')
-    T.assertPrinted([[
-Mottled Boar (1-2): Charge 1
-Scorpid Worker (3): Claw 1
-Sarkoth (4): Claw 1
-Pygmy Surf Crawler (5-6): Claw 1
-Dire Mottled Boar (6-7): Charge 1
-Durotar Tiger (7-8): Cower 1
-Elder Mottled Boar (8-9): Charge 1
-Encrusted Surf Crawler (9-10): Claw 2
-Venomtail Scorpid (9-10): Claw 2
-Venomtail Scorpid (9-10): Scorpid Poison 1
-Corrupted Mottled Boar (10-11): Charge 1
-Corrupted Scorpid (10-11): Scorpid Poison 1
-Death Flayer (11): Claw 2
-Death Flayer (11): Scorpid Poison 1
-]])
-  end,
-  function()
-    T.inInstance = true
-    SlashCmdList['OLLIVERRSTRAVELS']('here')
-    T.assertPrinted([[
-Skittering Crustacean (22-23): Claw 3
-Snapping Crustacean (23-24): Claw 3
-Aku'mai Fisher (23-24): Bite 3
-Aku'mai Fisher (23-24): Shell Shield 1
-Barbed Crustacean (25-26): Claw 4
-Ghamoo-ra (25): Bite 4
-Ghamoo-ra (25): Shell Shield 1
-Aku'mai Snapjaw (26-27): Bite 4
-Aku'mai Snapjaw (26-27): Shell Shield 1
-]])
   end,
   function()
     local icon = LibStub('LibDBIcon-1.0')

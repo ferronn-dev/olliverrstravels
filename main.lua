@@ -8,6 +8,5 @@ if select(3, UnitClass('player')) ~= 3 then
   return
 end
 
-G.Slash.Register()
 G.Event.Register()
 G.Minimap.Register()
