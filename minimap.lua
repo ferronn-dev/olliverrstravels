@@ -12,11 +12,6 @@ function G.Minimap.Register()
     type = 'launcher',
     label = 'Olliverr\'s Travels',
     icon = 'Interface\\Icons\\Ability_Hunter_BeastCall02',
-    OnClick = function(self, button)
-      -- Need to call twice to avoid a Blizzard bug.
-      InterfaceOptionsFrame_OpenToCategory('Olliverr\'s Travels')
-      InterfaceOptionsFrame_OpenToCategory('Olliverr\'s Travels')
-    end,
     OnTooltipShow = function(tooltip)
       tooltip:AddLine('Olliverr\'s Travels')
       local data = G.DB.ZoneData[G.Lib.CurrentZoneID()]
