@@ -1,12 +1,13 @@
 LUAS:=$(shell python3 build.py files)
 
-.PHONY: all clean
+.PHONY: zip clean
 
-all: test.out
+zip: OlliverrsTravels.zip
+
 clean:
 	rm -f OlliverrsTravels.* *.tmp *.out db.lua
 
-OlliverrsTravels.zip: OlliverrsTravels.toc $(LUAS)
+OlliverrsTravels.zip: test.out OlliverrsTravels.toc $(LUAS)
 	python3 build.py zip
 
 OlliverrsTravels.toc: build.yaml build.py
