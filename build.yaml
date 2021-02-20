@@ -18,7 +18,7 @@ libs:
 roots:
 - main.lua
 toc:
-  Interface: 11304
+  Interface: 11306
   Title: Olliverr's Travels
   Notes: Utilities for hunters
   SavedVariablesPerCharacter: OlliverrsTravelsPlayerData
