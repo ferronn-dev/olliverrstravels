@@ -2,5 +2,3 @@ __pycache__
 libs/
 db.lua
 OlliverrsTravels.*
-*.out
-*.tmp
