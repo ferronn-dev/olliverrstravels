@@ -88,23 +88,22 @@ T.RunTests({
     state:SendEvent('PLAYER_LOGOUT')
     T.assertEquals(true, _G['OlliverrsTravelsPlayerData']['26065,1'])
   end,
---[[
-  function(state)
-    local icon = LibStub('LibDBIcon-1.0')
+  function(state, _, _, _G)
+    local icon = _G['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       icon:GetMinimapButton(name):Click('LeftButton')
     end
     T.assertEquals('', state.printed)
   end,
-  function(state)
-    local icon = LibStub('LibDBIcon-1.0')
+  function(state, _, _, _G)
+    local icon = _G['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       icon:GetMinimapButton(name):Click('RightButton')
     end
     T.assertEquals('', state.printed)
   end,
-  function(state)
-    local icon = LibStub('LibDBIcon-1.0')
+  function(state, _, _, _G)
+    local icon = _G['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       local button = icon:GetMinimapButton(name)
       button:Click('MiddleButton')
@@ -114,6 +113,7 @@ T.RunTests({
     end
     T.assertEquals('', state.printed)
   end,
+--[[
   function(state)
     T.inInstance = true
     table.insert(T.crafts, {'Bite', '(Rank 3)'})
@@ -160,5 +160,3 @@ T.RunTests({
   end,
 ]]--
 })
-
-
