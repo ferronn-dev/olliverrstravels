@@ -440,25 +440,25 @@ T.RunTests({
     end
   end,
   function(G)
-    OlliverrsTravelsPlayerData = {['26065,1'] = true}
+    _G['OlliverrsTravelsPlayerData'] = {['26065,1'] = true}
     T.SendEvent('ADDON_LOADED', 'Wrong Addon')
     assert(G.State.NumSkills() == 0)
   end,
   function(G)
-    OlliverrsTravelsPlayerData = {['26065,1'] = true}
+    _G['OlliverrsTravelsPlayerData'] = {['26065,1'] = true}
     T.SendEvent('ADDON_LOADED', 'moo')
     assert(G.State.NumSkills() == 1)
-    assert(OlliverrsTravelsPlayerData == nil)
+    assert(_G['OlliverrsTravelsPlayerData'] == nil)
     T.SendEvent('PLAYER_LOGOUT')
-    assert(OlliverrsTravelsPlayerData['26065,1'])
+    assert(_G['OlliverrsTravelsPlayerData']['26065,1'])
   end,
   function(G)
-    OlliverrsTravelsPlayerData = nil
+    _G['OlliverrsTravelsPlayerData'] = nil
     T.SendEvent('ADDON_LOADED', 'moo')
     assert(G.State.NumSkills() == 0)
     G.State.AddSkillByName('Shell Shield', 1)
     T.SendEvent('PLAYER_LOGOUT')
-    assert(OlliverrsTravelsPlayerData['26065,1'])
+    assert(_G['OlliverrsTravelsPlayerData']['26065,1'])
   end,
   function()
     local icon = LibStub('LibDBIcon-1.0')

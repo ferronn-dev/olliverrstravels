@@ -10,8 +10,8 @@ end
 
 function events.ADDON_LOADED(name)
   if name == addonName then
-    G.State.LoadFromTable(OlliverrsTravelsPlayerData or {})
-    OlliverrsTravelsPlayerData = nil
+    G.State.LoadFromTable(_G['OlliverrsTravelsPlayerData'] or {})
+    _G['OlliverrsTravelsPlayerData'] = nil
   end
 end
 
@@ -56,5 +56,5 @@ function events.PLAYER_LEVEL_UP(newLevel)
 end
 
 function events.PLAYER_LOGOUT()
-  OlliverrsTravelsPlayerData = G.State.SerializeToTable()
+  _G['OlliverrsTravelsPlayerData'] = G.State.SerializeToTable()
 end
