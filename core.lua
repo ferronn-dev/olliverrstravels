@@ -6,10 +6,10 @@ G.Core = {}
 -- and dispatches to those functions.
 function G.Core.RegisterEventHandlers(events)
   local frame = CreateFrame('Frame')
-  frame:SetScript('OnEvent', function(self, event, ...)
+  frame:SetScript('OnEvent', function(_, event, ...)
     events[event](...)
   end)
-  for k, v in pairs(events) do
+  for k in pairs(events) do
     frame:RegisterEvent(k)
   end
 end
