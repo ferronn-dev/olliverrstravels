@@ -67,13 +67,12 @@ T.RunTests({
       state:SendEvent('PLAYER_LEVEL_UP', i)
     end
   end,
-  function(state, _, G)
+  function(state, _, G, _G)
     _G['OlliverrsTravelsPlayerData'] = {['26065,1'] = true}
     state:SendEvent('ADDON_LOADED', 'Wrong Addon')
     T.assertEquals(0, G.State.NumSkills())
   end,
---[[
-  function(state, _, G)
+  function(state, _, G, _G)
     _G['OlliverrsTravelsPlayerData'] = {['26065,1'] = true}
     state:SendEvent('ADDON_LOADED', 'moo')
     T.assertEquals(1, G.State.NumSkills())
@@ -81,7 +80,7 @@ T.RunTests({
     state:SendEvent('PLAYER_LOGOUT')
     T.assertEquals(true, _G['OlliverrsTravelsPlayerData']['26065,1'])
   end,
-  function(state, _, G)
+  function(state, _, G, _G)
     _G['OlliverrsTravelsPlayerData'] = nil
     state:SendEvent('ADDON_LOADED', 'moo')
     T.assertEquals(0, G.State.NumSkills())
@@ -89,6 +88,7 @@ T.RunTests({
     state:SendEvent('PLAYER_LOGOUT')
     T.assertEquals(true, _G['OlliverrsTravelsPlayerData']['26065,1'])
   end,
+--[[
   function(state)
     local icon = LibStub('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
