@@ -113,17 +113,23 @@ T.RunTests({
     end
     T.assertEquals('', state.printed)
   end,
---[[
-  function(state)
-    T.inInstance = true
-    table.insert(T.crafts, {'Bite', '(Rank 3)'})
-    table.insert(T.crafts, {'Shell Shield', '(Rank 1)'})
+  function(state, _, _, _G)
+    state.player.level = 23
+    state.instanceId = 48
+    state.crafts = {
+      { 'Bite', '(Rank 1)' },
+      { 'Bite', '(Rank 2)' },
+      { 'Bite', '(Rank 3)' },
+      { 'Growl', '(Rank 3)' },
+      { 'Natural Armor', '(Rank 5)' },
+      { 'Shell Shield', '(Rank 1)' },
+    }
     state:SendEvent('CRAFT_SHOW')
-    local icon = LibStub('LibDBIcon-1.0')
+    local icon = _G['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       local button = icon:GetMinimapButton(name)
       button:GetScript('OnEnter')(button)
-      want = {
+      local want = {
         { l = 'Olliverr\'s Travels' },
         { l = 'Skittering Crustacean (22-23)', r = 'Claw 3' },
         { l = 'Snapping Crustacean (23-24)', r = 'Claw 3' },
@@ -158,5 +164,4 @@ T.RunTests({
       button:GetScript('OnLeave')(button)
     end
   end,
-]]--
 })
