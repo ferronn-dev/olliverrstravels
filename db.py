@@ -1,5 +1,7 @@
 from collections import abc
 from pathlib import Path
+import pygtrie
+import yaml
 from google.cloud import bigquery
 import py2lua
 
@@ -17,20 +19,15 @@ def bq(query):
             key=lambda j: int(j.job_id.split('_')[-1]))
         if job.statement_type == 'SELECT']
 
-print(py2lua.addon_file({
-    'DB': {
-        name: {
+for f, ts in yaml.load(Path('build.yaml').read_text(), Loader=yaml.Loader)['sql'].items():
+    trie = pygtrie.StringTrie(separator='.')
+    for path, job in zip(ts, bq(Path(f).read_text())):
+        trie[path] = {
             key: val if isinstance(val, str) else [v.values() for v in val]
             for key, val in job
         }
-        for name, job in zip(
-            [
-                'AbilityNames',
-                'LevelData',
-                'ZoneLevelData',
-                'ZoneData',
-                'CreatureNames',
-            ],
-            bq(Path('db.sql').read_text()))
-    },
-}))
+    print(py2lua.addon_file(trie.traverse(
+        lambda _, path, kids, value=None:
+        (lambda merged=value if value else { k: v for kid in kids for k, v in kid.items() }:
+        { path[-1]: merged } if path else merged)()
+    )))

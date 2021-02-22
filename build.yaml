@@ -17,6 +17,13 @@ libs:
   libdbicon-1.0: https://repos.wowace.com/wow/libdbicon-1-0/trunk
 roots:
 - main.lua
+sql:
+  db.sql:
+  - DB.AbilityNames
+  - DB.LevelData
+  - DB.ZoneLevelData
+  - DB.ZoneData
+  - DB.CreatureNames
 toc:
   Interface: 11306
   Title: Olliverr's Travels
