@@ -7,4 +7,4 @@ clean:
 	rm -f OlliverrsTravels.* db.lua
 
 db.lua: db.py
-	python3 db.py > db.lua
+	python3 db.py
