@@ -54,7 +54,7 @@ WHERE
     data.ability = tmp_abilities.ability;
 
 -- AbilityNames
-SELECT id, ability
+SELECT id, [ability]
 FROM tmp_abilities
 ORDER BY id;
 
@@ -120,7 +120,7 @@ GROUP BY zone
 ORDER BY zone;
 
 -- CreatureNames
-SELECT creatures.id, creatures.name
+SELECT creatures.id, [creatures.name]
 FROM wowapi.creatures, tmp_trainers
 WHERE creatures.id = tmp_trainers.npc
 AND creatures.lang = 'en_US'
