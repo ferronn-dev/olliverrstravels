@@ -156,7 +156,7 @@ T.RunTests({
         { l = 'o1411, o1412, o1413, o1420, o1426, o1438, o1439', r = 'Cower 1' },
         { l = 'o1413, o1424, o1439, o1442', r = 'Cower 2' },
         { l = 'o1412, o1421, o1436, o1440', r = 'Furious Howl 1' },
-        { l = 'o1413', r = 'Lightning Breath 2' },
+        { l = 'i43, o1413', r = 'Lightning Breath 2' },
         { l = 'o1411, o1413', r = 'Scorpid Poison 1' },
         { l = 'o1436', r = 'Screech 1' },
       }
