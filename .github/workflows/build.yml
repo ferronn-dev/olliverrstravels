@@ -1,6 +1,9 @@
 ---
 name: build
-on: [push, workflow_dispatch]
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,3 +12,6 @@ jobs:
       uses: actions/checkout@v2
     - name: Run addonmaker
       uses: ferronn-dev/addonmaker@main
+      with:
+        command: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch') && 'release' || 'build' }}
+        github_token: ${{secrets.GITHUB_TOKEN}}
