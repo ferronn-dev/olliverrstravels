@@ -25,41 +25,79 @@ T.RunTests({
     state:SendEvent('PLAYER_LEVEL_UP', 9)
     T.assertEquals('', state.printed)
   end,
-  function(state)
+  function(state, _, _, _G)
+    local abilities = ({
+      [_G.WOW_PROJECT_CLASSIC] = {
+        'Bite 1',
+        'Bite 2',
+        'Charge 1',
+        'Claw 1',
+        'Claw 2',
+        'Cower 1',
+        'Furious Howl 1',
+        'Great Stamina 1',
+        'Growl 1',
+        'Growl 2',
+        'Natural Armor 1',
+        'Scorpid Poison 1',
+      },
+      [_G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
+        'Bite 1',
+        'Bite 2',
+        'Charge 1',
+        'Claw 1',
+        'Claw 2',
+        'Cower 1',
+        'Fire Breath 1',
+        'Furious Howl 1',
+        'Gore 1',
+        'Gore 2',
+        'Great Stamina 1',
+        'Growl 1',
+        'Growl 2',
+        -- 'Natural Armor 1',  FIXME
+        'Scorpid Poison 1',
+      },
+    })[_G.WOW_PROJECT_ID]
     state:SendEvent('PLAYER_LEVEL_UP', 10)
-    T.assertEquals('New trainable skills: ' .. table.concat({
-      'Bite 1',
-      'Bite 2',
-      'Charge 1',
-      'Claw 1',
-      'Claw 2',
-      'Cower 1',
-      'Furious Howl 1',
-      'Great Stamina 1',
-      'Growl 1',
-      'Growl 2',
-      'Natural Armor 1',
-      'Scorpid Poison 1',
-    }, ', ') .. '\n', state.printed)
+    T.assertEquals('New trainable skills: ' .. table.concat(abilities, ', ') .. '\n', state.printed)
   end,
   function(state)
     state:SendEvent('PLAYER_LEVEL_UP', 59)
     T.assertEquals('No new trainable skills.\n', state.printed)
   end,
-  function(state)
+  function(state, _, _, _G)
+    local abilities = ({
+      [_G.WOW_PROJECT_CLASSIC] = {
+        'Arcane Resistance 5',
+        'Charge 6',
+        'Fire Resistance 5',
+        'Frost Resistance 5',
+        'Great Stamina 10',
+        'Growl 7',
+        'Lightning Breath 6',
+        'Natural Armor 10',
+        'Nature Resistance 5',
+        'Shadow Resistance 5',
+      },
+      [_G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
+        'Arcane Resistance 5',
+        'Avoidance 2',
+        'Charge 6',
+        -- 'Fire Resistance 5',  FIXME
+        'Frost Resistance 5',
+        'Gore 8',
+        'Great Stamina 10',
+        'Growl 7',
+        'Lightning Breath 6',
+        -- 'Natural Armor 10',  FIXME
+        'Nature Resistance 5',
+        'Poison Spit 3',
+        'Shadow Resistance 5',
+      },
+    })[_G.WOW_PROJECT_ID]
     state:SendEvent('PLAYER_LEVEL_UP', 60)
-    T.assertEquals('New trainable skills: ' .. table.concat({
-      'Arcane Resistance 5',
-      'Charge 6',
-      'Fire Resistance 5',
-      'Frost Resistance 5',
-      'Great Stamina 10',
-      'Growl 7',
-      'Lightning Breath 6',
-      'Natural Armor 10',
-      'Nature Resistance 5',
-      'Shadow Resistance 5',
-    }, ', ') .. '\n', state.printed)
+    T.assertEquals('New trainable skills: ' .. table.concat(abilities, ', ') .. '\n', state.printed)
   end,
   function(state)
     -- Just ensure the function works for all levels.
@@ -114,6 +152,9 @@ T.RunTests({
     T.assertEquals('', state.printed)
   end,
   function(state, _, _, _G)
+    if _G.WOW_PROJECT_ID ~= _G.WOW_PROJECT_CLASSIC then
+      return
+    end
     state.player.level = 23
     state.instanceId = 48
     state.crafts = {
