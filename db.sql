@@ -49,7 +49,7 @@ FROM
     FROM
         petopia.ranks
     WHERE
-        ranks.ability NOT IN (SELECT ability FROM petopia.trainers)) data
+        ranks.purchasable) data
 WHERE
     data.ability = tmp_abilities.ability;
 

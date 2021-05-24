@@ -55,7 +55,7 @@ T.RunTests({
         'Great Stamina 1',
         'Growl 1',
         'Growl 2',
-        -- 'Natural Armor 1',  FIXME
+        'Natural Armor 1',
         'Scorpid Poison 1',
       },
     })[_G.WOW_PROJECT_ID]
@@ -84,13 +84,13 @@ T.RunTests({
         'Arcane Resistance 5',
         'Avoidance 2',
         'Charge 6',
-        -- 'Fire Resistance 5',  FIXME
+        'Fire Resistance 5',
         'Frost Resistance 5',
         'Gore 8',
         'Great Stamina 10',
         'Growl 7',
         'Lightning Breath 6',
-        -- 'Natural Armor 10',  FIXME
+        'Natural Armor 10',
         'Nature Resistance 5',
         'Poison Spit 3',
         'Shadow Resistance 5',
