@@ -1,129 +1,144 @@
 CREATE OR REPLACE TEMPORARY TABLE tmp_abilities AS
 SELECT
-    CAST(spellname.id AS INT64) id,
-    spellname.name_lang ability
+  spellname.name_lang AS ability,
+  CAST(spellname.id AS INT64) AS id
 FROM
-    spell, spellname, skilllineability
+  spell, spellname, skilllineability
 WHERE
-    skilllineability.skillline = "261" AND
-    skilllineability.spell = spell.id AND
-    skilllineability.spell = spellname.id AND
-    spell.namesubtext_lang = "Rank 1";
+  skilllineability.skillline = "261"
+  AND skilllineability.spell = spell.id
+  AND skilllineability.spell = spellname.id
+  AND spell.namesubtext_lang = "Rank 1";
 
 CREATE OR REPLACE TEMPORARY TABLE tmp_zones AS
 SELECT
-    CONCAT('o', id) id,
-    name_lang name
+  CONCAT("o", id) AS id,
+  name_lang AS zonename
 FROM uimap
 UNION ALL
 SELECT
-    CONCAT('i', id) id,
-    mapname_lang name
+  CONCAT("i", id) AS id,
+  mapname_lang AS zonename
 FROM map;
 
 CREATE OR REPLACE TEMPORARY TABLE tmp_trainers AS
 SELECT
-    tmp_abilities.id ability, rank, npc, minlevel, maxlevel, zone
+  tmp_abilities.id AS ability,
+  d.rank,
+  d.npc,
+  d.minlevel,
+  d.maxlevel,
+  d.zoneid
 FROM
-    tmp_abilities,
-    (SELECT
-        trainers.ability,
-        trainers.rank,
-        trainers.npc,
-        trainers.minlevel,
-        trainers.maxlevel,
-        tmp_zones.id zone
+  tmp_abilities,
+  (SELECT
+    trainers.ability,
+    trainers.rank,
+    trainers.npc,
+    trainers.minlevel,
+    trainers.maxlevel,
+    tmp_zones.id AS zoneid
     FROM
-        petopia.trainers,
-        tmp_zones
+      petopia.trainers,
+      tmp_zones
     WHERE
-        trainers.zone = tmp_zones.name
+      trainers.zone = tmp_zones.zonename
     UNION ALL
     SELECT
-        ranks.ability,
-        ranks.rank,
-        NULL AS npc,
-        ranks.petlevel AS minlevel,
-        ranks.petlevel AS maxlevel,
-        NULL AS zone
+      ranks.ability,
+      ranks.rank,
+      NULL AS npc,
+      ranks.petlevel AS minlevel,
+      ranks.petlevel AS maxlevel,
+      NULL AS zoneid
     FROM
-        petopia.ranks
+      petopia.ranks
     WHERE
-        ranks.purchasable) data
+      ranks.purchasable) AS d
 WHERE
-    data.ability = tmp_abilities.ability;
+  d.ability = tmp_abilities.ability;
 
 -- AbilityNames
-SELECT id, [ability]
+SELECT
+  id,
+  [ability] AS abilities
 FROM tmp_abilities
 ORDER BY id;
 
 -- LevelData
-SELECT
-    level,
-    IFNULL(arr, [])
-FROM
-    UNNEST(GENERATE_ARRAY(1, 60)) level
-LEFT JOIN
+WITH prep_1 AS (SELECT
+    minlevel AS level,
+    ARRAY_AGG(
+      STRUCT(ability, rank)
+      ORDER BY ability, rank) AS arr
+  FROM
     (SELECT
-        minlevel level,
-        ARRAY_AGG(
-            STRUCT(ability, rank)
-            ORDER BY ability, rank) arr
-    FROM
-        (SELECT
-            ability,
-            rank,
-            MIN(minlevel) minlevel
-        FROM
-            tmp_trainers
-        GROUP BY ability, rank)
-    GROUP BY level)
-USING(level)
+        ability,
+        rank,
+        MIN(minlevel) AS minlevel
+      FROM
+        tmp_trainers
+      GROUP BY ability, rank)
+  GROUP BY level
+)
+
+SELECT
+  level,
+  COALESCE(arr, []) AS ability_ranks
+FROM
+  UNNEST(GENERATE_ARRAY(1, 60)) AS level
+LEFT JOIN
+  prep_1
+  USING (level)
 ORDER BY level;
 
 -- ZoneLevelData
-SELECT
-    level,
-    IFNULL(arr, [])
-FROM
-    UNNEST(GENERATE_ARRAY(1, 60)) level
-LEFT JOIN
+WITH prep_1 AS (SELECT
+    minlevel AS level,
+    ARRAY_AGG(
+      STRUCT(ability, rank, zoneid)
+      ORDER BY ability, rank, zoneid) AS arr
+  FROM
     (SELECT
-        minlevel level,
-        ARRAY_AGG(
-            STRUCT(ability, rank, zone)
-            ORDER BY ability, rank, zone) arr
-    FROM
-        (SELECT
-            ability,
-            rank,
-            zone,
-            MIN(minlevel) minlevel
-        FROM
-            tmp_trainers
-        WHERE zone IS NOT NULL
-        GROUP BY ability, rank, zone)
-    GROUP BY level)
-USING(level)
+        ability,
+        rank,
+        zoneid,
+        MIN(minlevel) AS minlevel
+      FROM
+        tmp_trainers
+      WHERE zoneid IS NOT NULL
+      GROUP BY ability, rank, zoneid)
+  GROUP BY level
+)
+
+SELECT
+  level,
+  COALESCE(arr, []) AS ability_rank_zones
+FROM
+  UNNEST(GENERATE_ARRAY(1, 60)) AS level
+LEFT JOIN
+  prep_1
+  USING (level)
 ORDER BY level;
 
 -- ZoneData
 SELECT
-    zone,
-    ARRAY_AGG(
-        STRUCT(ability, rank, npc, minlevel, maxlevel)
-        ORDER BY minlevel, ability, rank, maxlevel, npc)
+  zoneid,
+  ARRAY_AGG(
+    STRUCT(ability, rank, npc, minlevel, maxlevel)
+    ORDER BY minlevel, ability, rank, maxlevel, npc) AS zone_data
 FROM tmp_trainers
-WHERE zone IS NOT NULL
-GROUP BY zone
-ORDER BY zone;
+WHERE zoneid IS NOT NULL
+GROUP BY zoneid
+ORDER BY zoneid;
 
 -- CreatureNames
-SELECT creatures.id, [creatures.name]
+SELECT
+  creatures.id,
+  [creatures.name] AS creature_names
 FROM wowapi.creatures, tmp_trainers
 WHERE creatures.id = tmp_trainers.npc
-AND creatures.lang = 'en_US'
+  AND creatures.lang = "en_US"
 ORDER BY creatures.id;
 
 DROP TABLE IF EXISTS tmp_trainers;

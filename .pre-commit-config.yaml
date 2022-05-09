@@ -1,0 +1,30 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1
+  hooks:
+  - id: check-json
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+- repo: https://github.com/JohnnyMorganz/StyLua
+  rev: v0.12.1
+  hooks:
+  - id: stylua
+- repo: https://github.com/sqlfluff/sqlfluff
+  rev: 0.11.0
+  hooks:
+  - id: sqlfluff-fix
+    args: [--dialect, bigquery]
+  - id: sqlfluff-lint
+    args: [--dialect, bigquery]
+- repo: local
+  hooks:
+  - id: addonmaker
+    name: addonmaker
+    entry: bash -c 'test "$CI" == "true" || sh addonmaker/run.sh'
+    language: system
+    pass_filenames: false
+- repo: meta
+  hooks:
+  - id: check-hooks-apply
+  - id: check-useless-excludes

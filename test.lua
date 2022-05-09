@@ -25,9 +25,9 @@ T.RunTests({
     state:SendEvent('PLAYER_LEVEL_UP', 9)
     T.assertEquals('', state.printed)
   end,
-  function(state, _, _, _G)
+  function(state, _, _, global)
     local abilities = ({
-      [_G.WOW_PROJECT_CLASSIC] = {
+      [global.WOW_PROJECT_CLASSIC] = {
         'Bite 1',
         'Bite 2',
         'Charge 1',
@@ -41,7 +41,7 @@ T.RunTests({
         'Natural Armor 1',
         'Scorpid Poison 1',
       },
-      [_G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
+      [global.WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
         'Bite 1',
         'Bite 2',
         'Charge 1',
@@ -58,7 +58,7 @@ T.RunTests({
         'Natural Armor 1',
         'Scorpid Poison 1',
       },
-    })[_G.WOW_PROJECT_ID]
+    })[global.WOW_PROJECT_ID]
     state:SendEvent('PLAYER_LEVEL_UP', 10)
     T.assertEquals('New trainable skills: ' .. table.concat(abilities, ', ') .. '\n', state.printed)
   end,
@@ -66,9 +66,9 @@ T.RunTests({
     state:SendEvent('PLAYER_LEVEL_UP', 59)
     T.assertEquals('No new trainable skills.\n', state.printed)
   end,
-  function(state, _, _, _G)
+  function(state, _, _, global)
     local abilities = ({
-      [_G.WOW_PROJECT_CLASSIC] = {
+      [global.WOW_PROJECT_CLASSIC] = {
         'Arcane Resistance 5',
         'Charge 6',
         'Fire Resistance 5',
@@ -80,7 +80,7 @@ T.RunTests({
         'Nature Resistance 5',
         'Shadow Resistance 5',
       },
-      [_G.WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
+      [global.WOW_PROJECT_BURNING_CRUSADE_CLASSIC] = {
         'Arcane Resistance 5',
         'Avoidance 2',
         'Charge 6',
@@ -95,7 +95,7 @@ T.RunTests({
         'Poison Spit 3',
         'Shadow Resistance 5',
       },
-    })[_G.WOW_PROJECT_ID]
+    })[global.WOW_PROJECT_ID]
     state:SendEvent('PLAYER_LEVEL_UP', 60)
     T.assertEquals('New trainable skills: ' .. table.concat(abilities, ', ') .. '\n', state.printed)
   end,
@@ -105,43 +105,43 @@ T.RunTests({
       state:SendEvent('PLAYER_LEVEL_UP', i)
     end
   end,
-  function(state, _, G, _G)
-    _G['OlliverrsTravelsPlayerData'] = {['26065,1'] = true}
+  function(state, _, G, global)
+    global['OlliverrsTravelsPlayerData'] = { ['26065,1'] = true }
     state:SendEvent('ADDON_LOADED', 'Wrong Addon')
     T.assertEquals(0, G.State.NumSkills())
   end,
-  function(state, _, G, _G)
-    _G['OlliverrsTravelsPlayerData'] = {['26065,1'] = true}
+  function(state, _, G, global)
+    global['OlliverrsTravelsPlayerData'] = { ['26065,1'] = true }
     state:SendEvent('ADDON_LOADED', 'moo')
     T.assertEquals(1, G.State.NumSkills())
-    T.assertEquals(nil, _G['OlliverrsTravelsPlayerData'])
+    T.assertEquals(nil, global['OlliverrsTravelsPlayerData'])
     state:SendEvent('PLAYER_LOGOUT')
-    T.assertEquals(true, _G['OlliverrsTravelsPlayerData']['26065,1'])
+    T.assertEquals(true, global['OlliverrsTravelsPlayerData']['26065,1'])
   end,
-  function(state, _, G, _G)
-    _G['OlliverrsTravelsPlayerData'] = nil
+  function(state, _, G, global)
+    global['OlliverrsTravelsPlayerData'] = nil
     state:SendEvent('ADDON_LOADED', 'moo')
     T.assertEquals(0, G.State.NumSkills())
     G.State.AddSkillByName('Shell Shield', 1)
     state:SendEvent('PLAYER_LOGOUT')
-    T.assertEquals(true, _G['OlliverrsTravelsPlayerData']['26065,1'])
+    T.assertEquals(true, global['OlliverrsTravelsPlayerData']['26065,1'])
   end,
-  function(state, _, _, _G)
-    local icon = _G['LibStub']('LibDBIcon-1.0')
+  function(state, _, _, global)
+    local icon = global['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       icon:GetMinimapButton(name):Click('LeftButton')
     end
     T.assertEquals('', state.printed)
   end,
-  function(state, _, _, _G)
-    local icon = _G['LibStub']('LibDBIcon-1.0')
+  function(state, _, _, global)
+    local icon = global['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       icon:GetMinimapButton(name):Click('RightButton')
     end
     T.assertEquals('', state.printed)
   end,
-  function(state, _, _, _G)
-    local icon = _G['LibStub']('LibDBIcon-1.0')
+  function(state, _, _, global)
+    local icon = global['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       local button = icon:GetMinimapButton(name)
       button:Click('MiddleButton')
@@ -151,8 +151,8 @@ T.RunTests({
     end
     T.assertEquals('', state.printed)
   end,
-  function(state, _, _, _G)
-    if _G.WOW_PROJECT_ID ~= _G.WOW_PROJECT_CLASSIC then
+  function(state, _, _, global)
+    if global.WOW_PROJECT_ID ~= global.WOW_PROJECT_CLASSIC then
       return
     end
     state.player.level = 23
@@ -166,7 +166,7 @@ T.RunTests({
       { 'Shell Shield', '(Rank 1)' },
     }
     state:SendEvent('CRAFT_SHOW')
-    local icon = _G['LibStub']('LibDBIcon-1.0')
+    local icon = global['LibStub']('LibDBIcon-1.0')
     for _, name in ipairs(icon:GetButtonList()) do
       local button = icon:GetMinimapButton(name)
       button:GetScript('OnEnter')(button)
@@ -174,20 +174,67 @@ T.RunTests({
         { l = 'Olliverr\'s Travels' },
         { l = 'Skittering Crustacean (22-23)', r = 'Claw 3' },
         { l = 'Snapping Crustacean (23-24)', r = 'Claw 3' },
-        { l = 'Aku\'mai Fisher (23-24)', r = 'Bite 3',
-          lr = 0.4, lg = 0.4, lb = 0.4, rr = 0.4, rg = 0.4, rb = 0.4 },
-        { l = 'Aku\'mai Fisher (23-24)', r = 'Shell Shield 1',
-          lr = 0.4, lg = 0.4, lb = 0.4, rr = 0.4, rg = 0.4, rb = 0.4 },
-        { l = 'Barbed Crustacean (25-26)', r = 'Claw 4',
-          lr = 1.0, lg = 0.0, lb = 0.0, rr = 1.0, rg = 0.0, rb = 0.0 },
-        { l = 'Ghamoo-ra (25)', r = 'Bite 4',
-          lr = 1.0, lg = 0.0, lb = 0.0, rr = 1.0, rg = 0.0, rb = 0.0 },
-        { l = 'Ghamoo-ra (25)', r = 'Shell Shield 1',
-          lr = 0.4, lg = 0.4, lb = 0.4, rr = 0.4, rg = 0.4, rb = 0.4 },
-        { l = 'Aku\'mai Snapjaw (26-27)', r = 'Bite 4',
-          lr = 1.0, lg = 0.0, lb = 0.0, rr = 1.0, rg = 0.0, rb = 0.0 },
-        { l = 'Aku\'mai Snapjaw (26-27)', r = 'Shell Shield 1',
-          lr = 0.4, lg = 0.4, lb = 0.4, rr = 0.4, rg = 0.4, rb = 0.4 },
+        {
+          l = 'Aku\'mai Fisher (23-24)',
+          r = 'Bite 3',
+          lr = 0.4,
+          lg = 0.4,
+          lb = 0.4,
+          rr = 0.4,
+          rg = 0.4,
+          rb = 0.4,
+        },
+        {
+          l = 'Aku\'mai Fisher (23-24)',
+          r = 'Shell Shield 1',
+          lr = 0.4,
+          lg = 0.4,
+          lb = 0.4,
+          rr = 0.4,
+          rg = 0.4,
+          rb = 0.4,
+        },
+        {
+          l = 'Barbed Crustacean (25-26)',
+          r = 'Claw 4',
+          lr = 1.0,
+          lg = 0.0,
+          lb = 0.0,
+          rr = 1.0,
+          rg = 0.0,
+          rb = 0.0,
+        },
+        { l = 'Ghamoo-ra (25)', r = 'Bite 4', lr = 1.0, lg = 0.0, lb = 0.0, rr = 1.0, rg = 0.0, rb = 0.0 },
+        {
+          l = 'Ghamoo-ra (25)',
+          r = 'Shell Shield 1',
+          lr = 0.4,
+          lg = 0.4,
+          lb = 0.4,
+          rr = 0.4,
+          rg = 0.4,
+          rb = 0.4,
+        },
+        {
+          l = 'Aku\'mai Snapjaw (26-27)',
+          r = 'Bite 4',
+          lr = 1.0,
+          lg = 0.0,
+          lb = 0.0,
+          rr = 1.0,
+          rg = 0.0,
+          rb = 0.0,
+        },
+        {
+          l = 'Aku\'mai Snapjaw (26-27)',
+          r = 'Shell Shield 1',
+          lr = 0.4,
+          lg = 0.4,
+          lb = 0.4,
+          rr = 0.4,
+          rg = 0.4,
+          rb = 0.4,
+        },
         { l = '---------------------' },
         { l = 'o1411, o1412, o1426, o1429, o1432, o1438', r = 'Charge 1' },
         { l = 'o1432, o1433, o1436', r = 'Charge 2' },
